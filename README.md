@@ -1,4 +1,4 @@
-# Stanford POS Penn Treebank annotated file to universal POS (kind of map_tag function from NLTK)
+# Stanford POS Penn Treebank annotated file to universal POS (kind of map_tag function from NLTK) [Regex only]
 
 sys.argv[1] = annotated Stanford Penn Treebank source file.
 
