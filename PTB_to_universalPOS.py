@@ -12,8 +12,8 @@ compliquer à manipuler pour notre tâche.
 Les étiquètes NER tree2conlltags seront convertis au format universel grâce aux regex.
 Pour le style, le script utilise beaucoup de lists et dicts comprehension.
 
-ATTENTION : il n'est compatible qu'avec Python 3.8 voire 3.9. Je vous ai mis en commentaire ligne 65, le code à remplacer pour 
-une compatibilité avec Python 3.7 - 3.5.
+ATTENTION : il n'est compatible qu'avec Python 3.8 voire 3.9
+
 """
 
 from contextlib import ExitStack
