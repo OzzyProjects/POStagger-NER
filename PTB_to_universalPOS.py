@@ -2,7 +2,7 @@
 #!usr/bin/env python3
 
 """
-Ce script est valable pour la question 3.1 et la question 3.2 dans le sens où il extrait les entités nommées et les met à la volée au format
+Ce script extrait les entités nommées et les met à la volée au format
 universel. Pour ce faire, il s'appuie sur une base regex solide constituée d'un dict qui prend en clés les regex matchant pour les formes NLTK à remplacer 
 et prend une clé contenant la valeur de l’étiquète universelle du NER ou du POS TAG. (voir fonction convert_format())
 Par ailleurs, il affiche également les POS tags de chaque mot au format universel.
