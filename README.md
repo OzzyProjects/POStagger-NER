@@ -1,4 +1,4 @@
-# Stanford POS Penn Treebank annotated file to universal POS And NER extraction [Regex only]
+Universal POS tagger and NER extractor [Regex only]
 
 sys.argv[1] = source file, text file to tag, annotate and extract named entities.
 
