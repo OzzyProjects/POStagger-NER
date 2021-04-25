@@ -23,8 +23,8 @@ from nltk.chunk import tree2conlltags
 import re
 import sys
 
-if len(list(filter(lambda x: x, sys.argv[1:]))) != 4:
-    print('Nombre d\'arguments incorrect !')
+if len(sys.argv[1:]) != 4:
+    print('Nombre d\'arguments incorrect ! 4 requis')
     sys.exit()
 
 # dictionnaire : table de correspondance des étiquètes NER (conll to standard)
