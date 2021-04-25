@@ -24,13 +24,13 @@ from nltk.chunk import tree2conlltags
 import re
 import sys
 
-# dictionnaire : table de correspondance des étiquètes NER (conll to standard)
-dict_ner = {'I-ORG':['I-ORGANIZATION','FACILITY'], 'B-ORG':'B-ORGANIZATION', 'I-PERS':'I-PERSON', 'B-PERS':'B-PERSON', 'I-LOC':'I-LOCATION', 'B-LOC':'B-LOCATION',
-'MISC':['DATE','TIME', 'MONEY', 'PERCENT']}
-
 if len(list(filter(lambda x: x, sys.argv[1:]))) != 4:
     print('Nombre d\'arguments incorrect !')
     sys.exit()
+
+# dictionnaire : table de correspondance des étiquètes NER (conll to standard)
+dict_ner = {'I-ORG':['I-ORGANIZATION','FACILITY'], 'B-ORG':'B-ORGANIZATION', 'I-PERS':'I-PERSON', 'B-PERS':'B-PERSON', 'I-LOC':'I-LOCATION', 'B-LOC':'B-LOCATION',
+'MISC':['DATE','TIME', 'MONEY', 'PERCENT']}
 
 # fonction qui charge le premier dictionnaire de données (valeurs particulières, valeurs universelles, étiquètes POS et NER)
 # c'est ce qui va servir de base pour la construction de nos regex.
@@ -38,7 +38,7 @@ def load_pos_table():
 
     try:
          
-        with open('POSTags_PTB_Universal_Linux.txt', 'r', encoding='utf-8') as universal:
+        with open(sys.argv[1], 'r', encoding='utf-8') as universal:
 
             # on commence par charger notre dictionnaire avec la table des étiquettes POS Penn Treebank, POS NLTK
             dict_pos = {}
@@ -62,6 +62,7 @@ def convert_format(line, dic):
         # pour éviter les conflits de remplacements. C'est la clé du dictionnaire. Sa valeur est l’étiquette universelle correspondante.
         # Cette correspondance est basée sur le dictionnaire pos_table que nous avons chargé avec POSTags_PTB_Universal_Linux.txt
         # si la valeur est une string on doit la concaténer pour éviter une itération caractère par caractère ''.join([t for t in val])
+        # d'où le test if not isinstance(val, str) pour gerer une liste de valeurs et une string en valeur.
         rx_dctvals = {re.compile("|".join(sorted([to_regex(v) if not isinstance(val, str) else to_regex(''.join([t for t in val])) for v in val], key=len, reverse=True))):key for key, val in dic.items()}
 
         # on remplace séquentiellement nos valeurs non standards par leur équivalent universel avec notre liste de regex constituées précédemment
@@ -69,7 +70,7 @@ def convert_format(line, dic):
         #Version 3.8+
         return [line := rx.sub(repl.replace('\\', '\\\\'), line) for rx, repl in rx_dctvals.items()][-1]
         """
-        version 3.7-
+        version 3.7-3.5
         for rx, repl in rx_dctvals.items():
             line = rx.sub(repl.replace('\\', '\\\\'), line)
         return line
@@ -108,11 +109,11 @@ def main():
 
         with ExitStack() as stack:
             
-            file = stack.enter_context(open('formal-tst.NE.key.04oct95_sample.txt', 'r', encoding='utf-8'))
+            file = stack.enter_context(open(sys.argv[2], 'r', encoding='utf-8'))
             # fichier d'extraction des entités nommées avec étiquettes non standards 
-            result_file_ner = stack.enter_context(open('wsj_0010_sample.txt.ne.nltk', 'w', encoding='utf-8'))
+            result_file_ner = stack.enter_context(open(sys.argv[3], 'w', encoding='utf-8'))
             # fichier avec étiquettes standards NER
-            result_file_ner_standard = stack.enter_context(open('wsj_0010_sample.txt.ne.standard', 'w', encoding='utf-8'))
+            result_file_ner_standard = stack.enter_context(open(sys.argv[4], 'w', encoding='utf-8'))
 
             pos_table = load_pos_table()
             content = file.read()
@@ -127,4 +128,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
