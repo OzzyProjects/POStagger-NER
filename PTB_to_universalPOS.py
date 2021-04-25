@@ -107,7 +107,9 @@ def main():
             file = stack.enter_context(open(sys.argv[2], 'r', encoding='utf-8'))
             # fichier d'extraction des entités nommées avec étiquettes non standards 
 
-            result_file_ner_standard = stack.enter_context(open(sys.argv[3], 'w', encoding='utf-8'))
+            # fichier d'extraction des entités nommées avec étiquettes non standards 
+            result_file_ner = stack.enter_context(open(sys.argv[3], 'w', encoding='utf-8'))
+            result_file_ner_standard = stack.enter_context(open(sys.argv[4], 'w', encoding='utf-8'))
 
             pos_table = load_pos_table()
             content = file.read()
