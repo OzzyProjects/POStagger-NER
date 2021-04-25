@@ -29,7 +29,7 @@ dict_ner = {'I-ORG':['I-ORGANIZATION','FACILITY'], 'B-ORG':'B-ORGANIZATION', 'I-
 'MISC':['DATE','TIME', 'MONEY', 'PERCENT']}
 
 if len(list(filter(lambda x: x, sys.argv[1:]))) != 4:
-    print('Nombre d\'arguments incorredt !')
+    print('Nombre d\'arguments incorrect !')
     sys.exit()
 
 # fonction qui charge le premier dictionnaire de données (valeurs particulières, valeurs universelles, étiquètes POS et NER)
