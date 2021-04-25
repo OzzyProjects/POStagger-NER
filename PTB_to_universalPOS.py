@@ -114,7 +114,8 @@ def main():
 
             # on écrit un mot par ligne dans le fichier de résultats avec son POS et son NER (séparés par une tabulation (format universel ou standard)
             # grâce à une list comprehension
-            [[result_file_ner_standard.write(convert_format(f'{name}\t{tag}\t{ner}\n', {**pos_table, **dict_ner})) for name, tag, ner in tup] for tup in zip(*(extract_entities(content)))]  
+            [[result_file_ner.write(convert_format(f'{name}\t{tag}\t{ner}\n', pos_table)) for name, tag, ner in line] for line in extract_entities(content)]
+            [[result_file_ner_standard.write(convert_format(f'{name}\t{tag}\t{ner}\n', {**pos_table, **dict_ner})) for name, tag, ner in line] for line in extract_entities(content)]  
 
     except Exception as error:       
         print(f'main error : {error}')
