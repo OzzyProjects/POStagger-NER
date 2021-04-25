@@ -2,7 +2,7 @@
 #!usr/bin/env python3
 
 """
-Ce script extrait les entités nommées et les met à la volée au format
+Ce script est valable pour la question 3.1 et la question 3.2 dans le sens où il extrait les entités nommées et les met à la volée au format
 universel. Pour ce faire, il s'appuie sur une base regex solide constituée d'un dict qui prend en clés les regex matchant pour les formes NLTK à remplacer 
 et prend une clé contenant la valeur de l’étiquète universelle du NER ou du POS TAG. (voir fonction convert_format())
 Par ailleurs, il affiche également les POS tags de chaque mot au format universel.
@@ -12,8 +12,8 @@ compliquer à manipuler pour notre tâche.
 Les étiquètes NER tree2conlltags seront convertis au format universel grâce aux regex.
 Pour le style, le script utilise beaucoup de lists et dicts comprehension.
 
-ATTENTION : il n'est compatible qu'avec Python 3.8 voire 3.9
-
+ATTENTION : il n'est compatible qu'avec Python 3.8 et + (version sortie en 2019). Je vous ai mis en commentaire ligne 65, le code à remplacer pour 
+une compatibilité avec Python 3.7 - 3.5.
 """
 
 from contextlib import ExitStack
@@ -28,13 +28,17 @@ import sys
 dict_ner = {'I-ORG':['I-ORGANIZATION','FACILITY'], 'B-ORG':'B-ORGANIZATION', 'I-PERS':'I-PERSON', 'B-PERS':'B-PERSON', 'I-LOC':'I-LOCATION', 'B-LOC':'B-LOCATION',
 'MISC':['DATE','TIME', 'MONEY', 'PERCENT']}
 
+if len(list(filter(lambda x: x, sys.argv[1:]))) != 4:
+    print('Nombre d\'arguments incorredt !')
+    sys.exit()
+
 # fonction qui charge le premier dictionnaire de données (valeurs particulières, valeurs universelles, étiquètes POS et NER)
 # c'est ce qui va servir de base pour la construction de nos regex.
 def load_pos_table():
 
     try:
          
-        with open(sys.argv[1], 'r', encoding='utf-8') as universal:
+        with open('POSTags_PTB_Universal_Linux.txt', 'r', encoding='utf-8') as universal:
 
             # on commence par charger notre dictionnaire avec la table des étiquettes POS Penn Treebank, POS NLTK
             dict_pos = {}
@@ -72,7 +76,7 @@ def convert_format(line, dic):
         """
 
     except Exception as erreur:
-        print(f'convert_format: {erreur}')
+        print(f'convert_tag: {erreur}')
 
 # fonction pour bien définir les délimitations entre les mots dans les regex et pour échapper les caractères spéciaux.
 def to_regex(x):
@@ -104,12 +108,11 @@ def main():
 
         with ExitStack() as stack:
             
-            file = stack.enter_context(open(sys.argv[2], 'r', encoding='utf-8'))
+            file = stack.enter_context(open('formal-tst.NE.key.04oct95_sample.txt', 'r', encoding='utf-8'))
             # fichier d'extraction des entités nommées avec étiquettes non standards 
-
-            # fichier d'extraction des entités nommées avec étiquettes non standards 
-            result_file_ner = stack.enter_context(open(sys.argv[3], 'w', encoding='utf-8'))
-            result_file_ner_standard = stack.enter_context(open(sys.argv[4], 'w', encoding='utf-8'))
+            result_file_ner = stack.enter_context(open('wsj_0010_sample.txt.ne.nltk', 'w', encoding='utf-8'))
+            # fichier avec étiquettes standards NER
+            result_file_ner_standard = stack.enter_context(open('wsj_0010_sample.txt.ne.standard', 'w', encoding='utf-8'))
 
             pos_table = load_pos_table()
             content = file.read()
@@ -117,10 +120,11 @@ def main():
             # on écrit un mot par ligne dans le fichier de résultats avec son POS et son NER (séparés par une tabulation (format universel ou standard)
             # grâce à une list comprehension
             [[result_file_ner.write(convert_format(f'{name}\t{tag}\t{ner}\n', pos_table)) for name, tag, ner in line] for line in extract_entities(content)]
-            [[result_file_ner_standard.write(convert_format(f'{name}\t{tag}\t{ner}\n', {**pos_table, **dict_ner})) for name, tag, ner in line] for line in extract_entities(content)]  
-
+            [[result_file_ner_standard.write(convert_format(f'{name}\t{tag}\t{ner}\n', {**pos_table, **dict_ner})) for name, tag, ner in line] for line in extract_entities(content)]   
+    
     except Exception as error:       
         print(f'main error : {error}')
 
 if __name__ == '__main__':
     main()
+
